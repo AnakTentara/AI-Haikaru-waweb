@@ -1,0 +1,13 @@
+{
+  "prefix": ".",
+  "botName": "AI-Haikaru",
+  "language": "id",
+  "features": {
+    "enableLogging": true,
+    "enableGemini": false
+  },
+  "messages": {
+    "errorExecutingCommand": "❌ Terjadi kesalahan saat menjalankan perintah tersebut.",
+    "commandNotFound": "❌ Perintah tidak ditemukan."
+  }
+}
