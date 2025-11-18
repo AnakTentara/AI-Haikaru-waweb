@@ -2,6 +2,7 @@ const { Client, LocalAuth } = pkg;
 
 import 'dotenv/config';
 
+import chromium from '@sparticuz/chromium';
 import pkg from "whatsapp-web.js";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -17,42 +18,22 @@ const __dirname = dirname(__filename);
 const config = JSON.parse(
     fs.readFileSync(join(__dirname, "config.json"), "utf8"),
 );
-
-function getChromiumPath() {
-    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-        return process.env.PUPPETEER_EXECUTABLE_PATH;
-    }
-
-    try {
-        return execSync("which chromium", { encoding: "utf8" }).trim();
-    } catch {
-        return undefined;
-    }
-}
-
 class WhatsAppBot {
     constructor() {
-        const chromiumPath = getChromiumPath();
-
         const clientConfig = {
             authStrategy: new LocalAuth(),
             puppeteer: {
                 args: [
-                    "--no-sandbox",
-                    "--disable-setuid-sandbox",
-                    "--disable-dev-shm-usage",
-                    "--disable-accelerated-2d-canvas",
-                    "--no-first-run",
-                    "--no-zygote",
-                    "--disable-gpu",
+                    ...chromium.args,
+                    '--hide-scrollbars',
+                    '--disable-web-security',
                 ],
+                executablePath: process.env.NODE_ENV === 'production'
+                    ? chromium.executablePath
+                    : undefined,
+                headless: chromium.headless,
             },
         };
-
-        if (chromiumPath) {
-            clientConfig.puppeteer.executablePath = chromiumPath;
-            console.log(`Menggunakan Chromium di: ${chromiumPath}`);
-        }
 
         this.client = new Client(clientConfig);
         this.commands = new Map();
