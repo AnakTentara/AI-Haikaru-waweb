@@ -9,7 +9,7 @@ import fs from "fs";
 import { execSync } from "child_process";
 import { GoogleGenAI } from '@google/genai';
 
-import app from '../server.js';
+import { startServer } from './server.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -145,5 +145,6 @@ class WhatsAppBot {
 
 const bot = new WhatsAppBot();
 
-export default app;
+startServer();
+
 bot.initialize().catch(console.error);
